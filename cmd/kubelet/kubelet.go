@@ -35,11 +35,11 @@ import (
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
-
+    // 1.创建kubelet启动命令
 	command := app.NewKubeletCommand(server.SetupSignalHandler())
 	logs.InitLogs()
 	defer logs.FlushLogs()
-
+	// 2.执行kubelet启动命令
 	if err := command.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)

@@ -118,7 +118,7 @@ func NewKubeletCommand(stopCh <-chan struct{}) *cobra.Command {
 		klog.Fatal(err)
 	}
 
-	cmd := &cobra.Command{
+	cmd := &cobra.Command{  // 对cobra.Command结构体进行实例化，获得一个cobra的一个命令实例cmd
 		Use: componentKubelet,
 		Long: `The kubelet is the primary "node agent" that runs on each
 node. It can register the node with the apiserver using one of: the hostname; a flag to
@@ -146,8 +146,11 @@ HTTP server: The kubelet can also listen for HTTP and respond to a simple API
 		// so we do all our parsing manually in Run, below.
 		// DisableFlagParsing=true provides the full set of flags passed to the kubelet in the
 		// `args` arg to Run, without Cobra's interference.
+		// kubelet有自己解析参数的规则，与cobra不一样，所以这里不使用cobra解析参数，即DisableFlagParsing=true
+		// 这里在Run定义的匿名回调函数进行手动解析参数，并启动kubelet
 		DisableFlagParsing: true,
 		Run: func(cmd *cobra.Command, args []string) {
+			// 这里相当于注册一个回调函数，当cmd.Execute()时，将会执行这个匿名函数，在这里也就是解析kubelet参数并执行kubelet命令
 			// initial flag parse, since we disable cobra's flag parsing
 			if err := cleanFlagSet.Parse(args); err != nil {
 				cmd.Usage()
